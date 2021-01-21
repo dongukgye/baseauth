@@ -4,16 +4,15 @@ from account.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('email', 'username', 'password', 'avatar')
         extra_kwargs = {'password': {'write_only': True }}
 
-    def get_avatar(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.avatar.url)
+    # def get_avatar(self, obj):
+    #     request = self.context.get('request')
+    #     return request.build_absolute_uri(obj.avatar.url)
 
     def create(self, validated_data):
         password = validated_data.pop('password')
