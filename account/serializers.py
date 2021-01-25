@@ -10,10 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email', 'username', 'password', 'avatar')
         extra_kwargs = {'password': {'write_only': True }}
 
-    # def get_avatar(self, obj):
-    #     request = self.context.get('request')
-    #     return request.build_absolute_uri(obj.avatar.url)
-
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
@@ -22,7 +18,15 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
+        instance.username = validated_data.get('username', instance.username)
         instance.avatar = validated_data.get('avatar', instance.avatar)
         instance.save()
         return instance
+
+
+class UserChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    class Meta:
+        model = User
